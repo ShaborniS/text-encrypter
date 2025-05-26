@@ -24,17 +24,20 @@ Features:
 
 ● Option to clear logs and encrypted data
 
-Installation Clone the repository:
+STEPS :
 
+1. Installation Clone the repository:
 -- "git clone https://github.com/ShaborniS/text-encrypter.git"
 
 Navigate to the project directory:
+
 -- "cd text-encrypter"
 
 Install the required Python packages:
+
 -- "pip install -r requirements.txt"
 
-Usage
+2. Usage
 
 🖥 Command Line
 
@@ -47,16 +50,17 @@ python gui_app.py
 
 Select the algorithm (AES, DES, RSA), enter your text, and choose to Encrypt or Decrypt.
 
-File Structure
+3. File Structure
+
 -- gui_app.py — Main GUI interface for encryption/decryption
 
 -- crypto_algorithms:
 
-1. aes_module.py — AES encryption using Fernet
+A. aes_module.py — AES encryption using Fernet
 
-2. des_module.py — DES encryption/decryption
+B. des_module.py — DES encryption/decryption
 
-3. rsa_module.py — RSA encryption/decryption
+C. rsa_module.py — RSA encryption/decryption
 
 -- encrypted.txt — File storing the latest encrypted text
 
