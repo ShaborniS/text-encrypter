@@ -45,6 +45,11 @@ class TextEncryptor:
         self.rsa_cipher_encrypt = PKCS1_OAEP.new(self.rsa_public_key)
         self.rsa_cipher_decrypt = PKCS1_OAEP.new(self.rsa_private_key)
 
+    # --- Helper methods ---
+    def load_key(self, filename):
+        with open(filename, "rb") as f:
+            return f.read()
+
     def write_fernet_key(self):
         key = Fernet.generate_key()
         with open(self.fernet_key_file, "wb") as f:
@@ -52,7 +57,7 @@ class TextEncryptor:
         logging.info("Generated and saved new Fernet key.")
 
     def write_aes_key(self):
-        key = get_random_bytes(16)  # AES-128
+        key = get_random_bytes(16)  # AES-128 key size
         with open(self.aes_key_file, "wb") as f:
             f.write(key)
         logging.info("Generated and saved new AES key.")
@@ -73,9 +78,7 @@ class TextEncryptor:
             f.write(public_key)
         logging.info("Generated and saved new RSA key pair.")
 
-    def load_key(self, filename):
-        return open(filename, "rb").read()
-
+    # --- Encryption & Decryption ---
     def encrypt(self, text, algorithm="fernet"):
         if algorithm == "fernet":
             encrypted = self.fernet_cipher.encrypt(text.encode()).decode()
@@ -130,129 +133,156 @@ class TextEncrypterApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Text Encryption Tool")
-        self.root.geometry("650x450")
-        self.root.resizable(False, False)
+        self.root.geometry("800x600")
+        self.root.resizable(True, True)
 
         self.encryptor = TextEncryptor()
 
         self._create_widgets()
         self._layout_widgets()
+        self._apply_styles()
+        self._bind_events()
 
     def _create_widgets(self):
         # Labels
-        self.input_label = tk.Label(self.root, text="Enter Text:")
-        self.result_label = tk.Label(self.root, text="Output:")
+        self.input_label = tk.Label(self.root, text="Enter Text:", font=("Helvetica", 12, "bold"))
+        self.result_label = tk.Label(self.root, text="Output:", font=("Helvetica", 12, "bold"))
 
         # Text areas
-        self.input_text = scrolledtext.ScrolledText(self.root, height=6)
-        self.result_text = scrolledtext.ScrolledText(self.root, height=6, state='disabled')
+        self.input_text = scrolledtext.ScrolledText(self.root, height=7, font=("Helvetica", 11), wrap=tk.WORD)
+        self.result_text = scrolledtext.ScrolledText(self.root, height=7, font=("Helvetica", 11), wrap=tk.WORD, state='disabled')
 
         # Algorithm selection
-        self.alg_label = tk.Label(self.root, text="Choose Algorithm:")
-        self.algorithm = ttk.Combobox(self.root, values=["fernet", "aes", "des", "rsa"], state="readonly")
+        self.alg_label = tk.Label(self.root, text="Choose Algorithm:", font=("Helvetica", 12))
+        self.algorithm = ttk.Combobox(self.root, values=["fernet", "aes", "des", "rsa"], state="readonly", font=("Helvetica", 11))
         self.algorithm.current(0)
 
         # Buttons frame
-        self.button_frame = tk.Frame(self.root)
+        self.button_frame = tk.Frame(self.root, bg="#f0f0f0")
 
-        # Buttons
-        self.encrypt_button = tk.Button(self.button_frame, text="Encrypt", command=self.encrypt_action)
-        self.decrypt_button = tk.Button(self.button_frame, text="Decrypt", command=self.decrypt_action)
-        self.load_button = tk.Button(self.button_frame, text="Load from File", command=self.load_from_file)
-        self.view_log_button = tk.Button(self.button_frame, text="View Log", command=self.view_log)
-        self.clear_log_button = tk.Button(self.button_frame, text="Clear Log", command=self.clear_log)
-        self.clear_encrypted_button = tk.Button(self.button_frame, text="Clear Encrypted", command=self.clear_encrypted_file)
+        # Buttons with pastel background colors
+        pastel_colors = ["#a8dadc", "#ffd6a5", "#ffafcc", "#cdb4db", "#b5ead7", "#f9c2ff"]
+        self.encrypt_button = tk.Button(self.button_frame, text="Encrypt", bg=pastel_colors[0], fg="#222222", relief="flat", padx=15, pady=7, font=("Helvetica", 11, "bold"), cursor="hand2", activebackground="#8bc9cc")
+        self.decrypt_button = tk.Button(self.button_frame, text="Decrypt", bg=pastel_colors[1], fg="#222222", relief="flat", padx=15, pady=7, font=("Helvetica", 11, "bold"), cursor="hand2", activebackground="#ffbf70")
+        self.load_button = tk.Button(self.button_frame, text="Load from File", bg=pastel_colors[2], fg="#222222", relief="flat", padx=15, pady=7, font=("Helvetica", 11, "bold"), cursor="hand2", activebackground="#e292af")
+        self.view_log_button = tk.Button(self.button_frame, text="View Log", bg=pastel_colors[3], fg="#222222", relief="flat", padx=15, pady=7, font=("Helvetica", 11, "bold"), cursor="hand2", activebackground="#b6a4d9")
+        self.clear_log_button = tk.Button(self.button_frame, text="Clear Log", bg=pastel_colors[4], fg="#222222", relief="flat", padx=15, pady=7, font=("Helvetica", 11, "bold"), cursor="hand2", activebackground="#a0d6c6")
+        self.clear_encrypted_button = tk.Button(self.button_frame, text="Clear Encrypted", bg=pastel_colors[5], fg="#222222", relief="flat", padx=15, pady=7, font=("Helvetica", 11, "bold"), cursor="hand2", activebackground="#d69aff")
 
     def _layout_widgets(self):
-        self.input_label.pack(pady=(10, 0))
-        self.input_text.pack(fill='x', padx=10)
+        padding_x = 15
+        self.input_label.pack(pady=(15, 5), anchor='w', padx=padding_x)
+        self.input_text.pack(fill='x', padx=padding_x)
 
-        self.alg_label.pack(pady=(10, 0))
-        self.algorithm.pack(padx=10)
+        self.alg_label.pack(pady=(15, 5), anchor='w', padx=padding_x)
+        self.algorithm.pack(padx=padding_x, fill='x')
 
-        self.result_label.pack(pady=(10, 0))
-        self.result_text.pack(fill='x', padx=10)
+        self.result_label.pack(pady=(15, 5), anchor='w', padx=padding_x)
+        self.result_text.pack(fill='x', padx=padding_x)
 
-        self.button_frame.pack(pady=15)
+        self.button_frame.pack(pady=20, padx=padding_x, fill='x')
+        self.encrypt_button.grid(row=0, column=0, padx=4, pady=5)
+        self.decrypt_button.grid(row=0, column=1, padx=4, pady=5)
+        self.load_button.grid(row=0, column=2, padx=4, pady=5)
+        self.view_log_button.grid(row=0, column=3, padx=4, pady=5)
+        self.clear_log_button.grid(row=0, column=4, padx=4, pady=5)
+        self.clear_encrypted_button.grid(row=0, column=5, padx=4, pady=5)
 
-        self.encrypt_button.grid(row=0, column=0, padx=10)
-        self.decrypt_button.grid(row=0, column=1, padx=10)
-        self.load_button.grid(row=0, column=2, padx=10)
-        self.view_log_button.grid(row=0, column=3, padx=10)
-        self.clear_log_button.grid(row=1, column=0, padx=10, pady=5)
-        self.clear_encrypted_button.grid(row=1, column=1, padx=10, pady=5)
+    def _apply_styles(self):
+        # Font and colors already set inline, add hover effects:
+        buttons = [self.encrypt_button, self.decrypt_button, self.load_button,
+                   self.view_log_button, self.clear_log_button, self.clear_encrypted_button]
 
-    def encrypt_action(self):
-        plain = self.input_text.get("1.0", tk.END).strip()
-        algorithm = self.algorithm.get()
-        if not plain:
-            messagebox.showwarning("Input Error", "Enter text to encrypt.")
+        def on_enter(e):
+            e.widget['bg'] = "#ffd166"  # bright pastel yellow
+
+        def on_leave(e):
+            # revert to original pastel background
+            mapping = {
+                self.encrypt_button: "#a8dadc",
+                self.decrypt_button: "#ffd6a5",
+                self.load_button: "#ffafcc",
+                self.view_log_button: "#cdb4db",
+                self.clear_log_button: "#b5ead7",
+                self.clear_encrypted_button: "#f9c2ff"
+            }
+            e.widget['bg'] = mapping[e.widget]
+
+        for btn in buttons:
+            btn.bind("<Enter>", on_enter)
+            btn.bind("<Leave>", on_leave)
+
+    def _bind_events(self):
+        self.encrypt_button.config(command=self.encrypt_text)
+        self.decrypt_button.config(command=self.decrypt_text)
+        self.load_button.config(command=self.load_from_file)
+        self.view_log_button.config(command=self.view_log)
+        self.clear_log_button.config(command=self.clear_log)
+        self.clear_encrypted_button.config(command=self.clear_encrypted_file)
+
+    # Button command implementations
+    def encrypt_text(self):
+        text = self.input_text.get("1.0", "end").strip()
+        if not text:
+            messagebox.showwarning("Warning", "Input text is empty.")
             return
+        algo = self.algorithm.get()
         try:
-            encrypted = self.encryptor.encrypt(plain, algorithm)
-            self._update_result_text(encrypted)
-            messagebox.showinfo("Success", f"Encrypted and saved to encrypted.txt using {algorithm}.")
+            encrypted = self.encryptor.encrypt(text, algorithm=algo)
+            self.result_text.config(state='normal')
+            self.result_text.delete("1.0", "end")
+            self.result_text.insert("1.0", encrypted)
+            self.result_text.config(state='disabled')
         except Exception as e:
             messagebox.showerror("Error", f"Encryption failed: {e}")
 
-    def decrypt_action(self):
-        encrypted = self.input_text.get("1.0", tk.END).strip()
-        algorithm = self.algorithm.get()
-        if not encrypted:
-            messagebox.showwarning("Input Error", "Enter encrypted text to decrypt.")
+    def decrypt_text(self):
+        text = self.input_text.get("1.0", "end").strip()
+        if not text:
+            messagebox.showwarning("Warning", "Input text is empty.")
             return
+        algo = self.algorithm.get()
         try:
-            decrypted = self.encryptor.decrypt(encrypted, algorithm)
-            self._update_result_text(decrypted)
+            decrypted = self.encryptor.decrypt(text, algorithm=algo)
+            self.result_text.config(state='normal')
+            self.result_text.delete("1.0", "end")
+            self.result_text.insert("1.0", decrypted)
+            self.result_text.config(state='disabled')
         except Exception as e:
             messagebox.showerror("Error", f"Decryption failed: {e}")
 
     def load_from_file(self):
         if not os.path.exists("encrypted.txt"):
-            messagebox.showerror("Error", "encrypted.txt not found.")
+            messagebox.showinfo("Info", "No encrypted.txt file found.")
             return
-        try:
-            with open("encrypted.txt", "r") as file:
-                content = file.read()
-            self.input_text.delete("1.0", tk.END)
-            self.input_text.insert(tk.END, content)
-            messagebox.showinfo("Loaded", "Encrypted text loaded into input box.")
-        except Exception as e:
-            messagebox.showerror("Error", f"Failed to load file: {e}")
+        with open("encrypted.txt", "r") as f:
+            content = f.read()
+        self.input_text.delete("1.0", "end")
+        self.input_text.insert("1.0", content)
 
     def view_log(self):
         if not os.path.exists("activity.log"):
-            messagebox.showinfo("Info", "No logs available.")
+            messagebox.showinfo("Info", "No activity.log file found.")
             return
-        try:
-            with open("activity.log", "r") as log_file:
-                content = log_file.read()
-            log_window = tk.Toplevel(self.root)
-            log_window.title("Activity Log")
-            text_area = scrolledtext.ScrolledText(log_window, width=80, height=30)
-            text_area.pack(fill='both', expand=True)
-            text_area.insert(tk.END, content)
-            text_area.config(state='disabled')
-        except Exception as e:
-            messagebox.showerror("Error", f"Failed to open log: {e}")
+        with open("activity.log", "r") as f:
+            log_content = f.read()
+        log_window = tk.Toplevel(self.root)
+        log_window.title("Activity Log")
+        log_window.geometry("600x400")
+        log_text = scrolledtext.ScrolledText(log_window, wrap=tk.WORD, font=("Consolas", 10))
+        log_text.pack(expand=True, fill="both")
+        log_text.insert("1.0", log_content)
+        log_text.config(state="disabled")
 
     def clear_log(self):
-        if messagebox.askyesno("Confirm", "Clear the activity log?"):
-            with open("activity.log", "w") as log_file:
-                log_file.write("")
-            messagebox.showinfo("Cleared", "Activity log cleared.")
+        if messagebox.askyesno("Confirm", "Are you sure you want to clear the log?"):
+            open("activity.log", "w").close()
+            messagebox.showinfo("Info", "Log cleared successfully.")
 
     def clear_encrypted_file(self):
-        if messagebox.askyesno("Confirm", "Clear the encrypted.txt file?"):
-            with open("encrypted.txt", "w") as f:
-                f.write("")
-            messagebox.showinfo("Cleared", "encrypted.txt cleared.")
-
-    def _update_result_text(self, text):
-        self.result_text.config(state='normal')
-        self.result_text.delete("1.0", tk.END)
-        self.result_text.insert(tk.END, text)
-        self.result_text.config(state='disabled')
+        if messagebox.askyesno("Confirm", "Are you sure you want to clear encrypted.txt?"):
+            open("encrypted.txt", "w").close()
+            messagebox.showinfo("Info", "encrypted.txt cleared successfully.")
 
 if __name__ == "__main__":
     root = tk.Tk()
