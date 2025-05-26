@@ -1,50 +1,66 @@
-# Text Encrypter
+Text Encrypter
+A Python-based cybersecurity tool for encrypting and decrypting text using three major encryption algorithms: AES (via Fernet), DES, and RSA. The application supports both command-line and graphical user interfaces (GUI) for secure and user-friendly text encryption.
 
-A Python project for encrypting and decrypting text using symmetric encryption with the Fernet module from the cryptography library. It supports both command-line and graphical user interfaces (GUI).
+Features
+Supports three encryption algorithms:
 
-## Features
+AES (via Fernet)
 
-- Encrypt plain text and save the encrypted output to a file (`encrypted.txt`)
-- Decrypt encrypted text either from input or directly from the file
-- Automatically generates and manages an encryption key (`secret.key`)
-- Logs encryption and decryption activity to `activity.log`
-- User-friendly GUI built with Tkinter for easier operation
+DES (Data Encryption Standard)
 
-## Installation
+RSA (Rivest–Shamir–Adleman)
 
-1. Clone or download the project
-2. Install required Python packages using:
+Encrypt plain text and save to encrypted.txt
 
-## Usage
+Decrypt encrypted text either from input or file
 
-### Command Line
+Automatically manages secret keys and RSA key pairs
 
-1. Run the main script to encrypt or decrypt text via terminal prompts:
+GUI built with Tkinter for easy interaction
 
+Command-line support for quick usage
 
-### GUI
+Logging of all encryption/decryption activity (activity.log)
 
-2. Run the GUI app for an interactive window-based experience:
+Option to clear logs and encrypted data
 
-## Files Description
+Installation
+Clone the repository:
+git clone https://github.com/ShaborniS/text-encrypter.git
 
-- `encrypted.py` — Main logic for terminal-based encryption/decryption  
-- `gui_app.py` — GUI application to perform encryption and decryption  
-- `secret.key` — Automatically generated encryption key file  
-- `encrypted.txt` — File storing encrypted text  
-- `activity.log` — Logs all encryption/decryption operations  
-- `requirements.txt` — List of required Python packages
+Navigate to the project directory:
+cd text-encrypter
 
-## Requirements
+Install the required Python packages:
+pip install -r requirements.txt
 
-- Python 3.6 or newer  
-- cryptography library  
-- tkinter (usually included in Python standard library)
+Usage
+🖥 Command Line
+You can run the script to encrypt or decrypt via terminal (to be implemented or documented).
 
-## License
+🪟 GUI
+Run the GUI application:
+python gui_app.py
 
-This project is licensed under the MIT License.
+Select the algorithm (AES, DES, RSA), enter your text, and choose to Encrypt or Decrypt.
 
----
+File Structure
+gui_app.py — Main GUI interface for encryption/decryption
 
-For any issues or feature requests, please open an issue on the project repository.
+crypto_algorithms/
+
+aes_module.py — AES encryption using Fernet
+
+des_module.py — DES encryption/decryption
+
+rsa_module.py — RSA encryption/decryption
+
+encrypted.txt — File storing the latest encrypted text
+
+secret.key — AES (Fernet) key
+
+rsa_public.pem & rsa_private.pem — RSA key pair
+
+activity.log — Logs of encryption/decryption events
+
+requirements.txt — Python dependencies
