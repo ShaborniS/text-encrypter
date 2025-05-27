@@ -1,8 +1,8 @@
-#**Text Encrypter 💻✨**
+# **Text Encrypter 💻✨**
 
-👉 A Python-based cybersecurity tool for encrypting and decrypting text using three major encryption algorithms: AES (via Fernet), DES, and RSA. The application supports both command-line and graphical user interfaces (GUI) for secure and user-friendly text encryption.
+ A Python-based cybersecurity tool for encrypting and decrypting text using three major encryption algorithms: AES (via Fernet), DES, and RSA. The application supports both command-line and graphical user interfaces (GUI) for secure and user-friendly text encryption.
 
-👉 ##**Features:** 
+## 👉**Features:** 
 
 📌 Supports three encryption algorithms:
 
@@ -26,11 +26,13 @@
 
 📌 Option to clear logs and encrypted data
 
-App preview 
+## 👉 App preview :
+
 ![Screenshot](Screenshot_preview.png)
+
 ![Screenshot](Screenshot_working.png)
 
-👉 ##**STEPS :**
+## 👉 **STEPS :**
 
 ### 1. Installation Clone the repository:✨
 
