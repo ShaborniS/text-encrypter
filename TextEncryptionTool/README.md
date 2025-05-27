@@ -1,33 +1,40 @@
-|| Text Encrypter ||
+#**Text Encrypter 💻✨**
 
-A Python-based cybersecurity tool for encrypting and decrypting text using three major encryption algorithms: AES (via Fernet), DES, and RSA. The application supports both command-line and graphical user interfaces (GUI) for secure and user-friendly text encryption.
+👉 A Python-based cybersecurity tool for encrypting and decrypting text using three major encryption algorithms: AES (via Fernet), DES, and RSA. The application supports both command-line and graphical user interfaces (GUI) for secure and user-friendly text encryption.
 
-Features: 
+👉 ##**Features:** 
 
-● Supports three encryption algorithms:
+📌 Supports three encryption algorithms:
 
   --AES (via Fernet)
+  
   --DES (Data Encryption Standard)
+
   --RSA (Rivest–Shamir–Adleman)
 
-● Encrypt plain text and save to encrypted.txt
+📌 Encrypt plain text and save to encrypted.txt
 
-● Decrypt encrypted text either from input or file
+📌 Decrypt encrypted text either from input or file
 
-● Automatically manages secret keys and RSA key pairs
+📌 Automatically manages secret keys and RSA key pairs
 
-● GUI built with Tkinter for easy interaction
+📌 GUI built with Tkinter for easy interaction
 
-● Command-line support for quick usage
+📌 Command-line support for quick usage
 
-● Logging of all encryption/decryption activity (activity.log)
+📌 Logging of all encryption/decryption activity (activity.log)
 
-● Option to clear logs and encrypted data
+📌 Option to clear logs and encrypted data
 
-STEPS :
+App preview 
+![Screenshot](Screenshot_preview.png)
+![Screenshot](Screenshot_working.png)
 
-1. Installation Clone the repository:
--- "git clone https://github.com/ShaborniS/text-encrypter.git"
+👉 ##**STEPS :**
+
+### 1. Installation Clone the repository:✨
+
+🔗 git clone "https://github.com/ShaborniS/text-encrypter.git"
 
 Navigate to the project directory:
 
@@ -37,20 +44,20 @@ Install the required Python packages:
 
 -- "pip install -r requirements.txt"
 
-2. Usage
+### 2. Usage✨
 
-🖥 Command Line
+🖥 <u>Command Line</u>
 
 You can run the script to encrypt or decrypt via terminal (to be implemented or documented).
 
-🪟 GUI
+🪟 <u>GUI</u>
 
 Run the GUI application:
 python gui_app.py
 
 Select the algorithm (AES, DES, RSA), enter your text, and choose to Encrypt or Decrypt.
 
-3. File Structure
+### 3. File Structure✨
 
 -- gui_app.py — Main GUI interface for encryption/decryption
 
